@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h> // for strcmp
 #include "shell_lib.h"
@@ -38,7 +39,20 @@ void assert_equals(const char *expected, const char *actual, char *message) {
     }
 }
 
+int did_read_char_count = 0;
+char *cmd_to_read = "";
+int fake_getchar() {
+    int c = cmd_to_read[did_read_char_count];
+    did_read_char_count++;
+    return c;
+}
+
 int main(int argc, char **arghv) {
+
+    cmd_to_read = "ls\n";
+    char *cmd = ash_read_line(fake_getchar);
+    const char *expected_cmd = "ls";
+    assert_equals(expected_cmd, cmd, "Reading the line must return the chars that make up the command");
 
     // arrange
     char **unknown_cmd = (char *[]){ "ajsfkjalkfjsaklfjaks" };

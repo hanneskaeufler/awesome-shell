@@ -5,6 +5,29 @@
 #include "shell_lib.h"
 
 /**
+ * https://stackoverflow.com/questions/9410/how-do-you-pass-a-function-as-a-parameter-in-c
+ */
+char *ash_read_line(int (*getchar_fn)()) {
+    char *buffer = malloc(sizeof(char) * 1024);
+    int c;
+    int position = 0;
+
+    while (1) {
+        c = (*getchar_fn)();
+
+        if (c == '\n') {
+            buffer[position] =  '\0';
+            return buffer;
+        } else {
+            buffer[position] = c;
+        }
+        position++;
+    }
+
+    return buffer;
+}
+
+/**
  * Execute the parsed command and return with status
  */
 int ash_execute_command(char **args) {
@@ -31,11 +54,14 @@ int ash_execute_command(char **args) {
  * Performs the infinite loop until we kill the shell
  */
 void ash_input_loop() {
+    char *line;
     char **args = NULL;
     int status;
 
     do {
         printf("> ");
+        line = ash_read_line(getchar);
+        *args = line;
         status = ash_execute_command(args);
     } while (status);
 }
