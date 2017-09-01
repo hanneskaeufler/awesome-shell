@@ -37,7 +37,7 @@ int ash_execute_command(char **args) {
 
     if (pid == 0) {
         if (execvp(args[0], args) == -1) {
-            perror("shellds");
+            perror("ash");
         }
 
         exit(EXIT_FAILURE);
@@ -63,5 +63,9 @@ void ash_input_loop() {
         line = ash_read_line(getchar);
         *args = line;
         status = ash_execute_command(args);
+
+        // cleanup. I dont really understand this yet.
+        free(line);
+        free(args);
     } while (status);
 }
