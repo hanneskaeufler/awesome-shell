@@ -44,7 +44,7 @@ int main(int argc, char **arghv) {
     char **unknown_cmd = (char *[]){ "ajsfkjalkfjsaklfjaks" };
     const char *expected = "executing failed";
     // act
-    execute_command(unknown_cmd);
+    ash_execute_command(unknown_cmd);
     // assert
     assert_equals(expected, last_perror, "Executing an unknown command prints error");
 
@@ -52,7 +52,7 @@ int main(int argc, char **arghv) {
     char **successfull_cmd = (char *[]){ "true" };
     const char *expected_succ = "";
     // act
-    execute_command(successfull_cmd);
+    ash_execute_command(successfull_cmd);
     // assert
     assert_equals(expected_succ, last_perror, "Executing a known command does not print and error");
 

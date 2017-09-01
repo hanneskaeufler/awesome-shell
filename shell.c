@@ -4,7 +4,7 @@
 
 int main(int argc, char **arghv)
 {
-    input_loop();
+    ash_input_loop();
 
     return EXIT_SUCCESS;
 }

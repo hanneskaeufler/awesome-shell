@@ -7,7 +7,7 @@
 /**
  * Execute the parsed command and return with status
  */
-int execute_command(char **args) {
+int ash_execute_command(char **args) {
     pid_t pid, wpid;
     int status;
     pid = fork();
@@ -30,12 +30,12 @@ int execute_command(char **args) {
 /**
  * Performs the infinite loop until we kill the shell
  */
-void input_loop() {
+void ash_input_loop() {
     char **args = NULL;
     int status;
 
     do {
         printf("> ");
-        status = execute_command(args);
+        status = ash_execute_command(args);
     } while (status);
 }
