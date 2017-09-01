@@ -1,18 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-
-/**
- * Performs the infinite loop until we kill the shell
- */
-void input_loop()
-{
-    int status;
-
-    do {
-        printf("> ");
-        status = 0;
-    } while (status);
-}
+#include "shell_lib.h"
 
 int main(int argc, char **arghv)
 {

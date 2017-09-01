@@ -1,4 +1,7 @@
 all:
-	clang -Wall shell.c -o shell
+	clang -Wall shell.c shell_lib.c -o shell
 
-.PHONY: all
+test:
+	clear && clang -Wall shell_lib.c shell_specs.c -o shell_specs && ./shell_specs
+
+.PHONY: all test
