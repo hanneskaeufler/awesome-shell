@@ -8,7 +8,8 @@
  * https://stackoverflow.com/questions/9410/how-do-you-pass-a-function-as-a-parameter-in-c
  */
 char *ash_read_line(int (*getchar_fn)()) {
-    char *buffer = malloc(sizeof(char) * 1024);
+    int bufsize = 1;
+    char *buffer = malloc(sizeof(char) * bufsize);
     int c;
     int position = 0;
 
@@ -23,6 +24,11 @@ char *ash_read_line(int (*getchar_fn)()) {
         }
         position++;
     }
+
+    /* if (position >= bufsize) { */
+    /*     bufsize += 1024; */
+    /*     buffer = realloc(buffer, bufsize); */
+    /* } */
 
     return buffer;
 }

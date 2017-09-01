@@ -47,12 +47,25 @@ int fake_getchar() {
 int main(int argc, char **arghv) {
 
     // arrange
+    did_read_char_count = 0;
     cmd_to_read = "ls\n";
     const char *expected_cmd = "ls";
     // act
     char *cmd = ash_read_line(fake_getchar);
     // assert
     assert_equals(expected_cmd, cmd, "Reading the line must return the chars that make up the command");
+
+    // -----------------
+
+    // arrange
+    did_read_char_count = 0;
+    cmd_to_read = "letsseeifthisworkswithsuperlongcommands\n"; // this is 41 chars I think so 41 * 8 (8 because 64 bit? else 4) bytes = 328 bytes?
+    const char *expected_long_cmd = "letsseeifthisworkswithsuperlongcommands";
+    // act
+    char *long_cmd = ash_read_line(fake_getchar);
+    // assert
+    assert_equals(expected_long_cmd, long_cmd, "Reading super long commands works");
+
 
     // -----------------
 
