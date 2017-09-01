@@ -49,10 +49,15 @@ int fake_getchar() {
 
 int main(int argc, char **arghv) {
 
+    // arrange
     cmd_to_read = "ls\n";
-    char *cmd = ash_read_line(fake_getchar);
     const char *expected_cmd = "ls";
+    // act
+    char *cmd = ash_read_line(fake_getchar);
+    // assert
     assert_equals(expected_cmd, cmd, "Reading the line must return the chars that make up the command");
+
+    // -----------------
 
     // arrange
     char **unknown_cmd = (char *[]){ "ajsfkjalkfjsaklfjaks" };
@@ -62,6 +67,8 @@ int main(int argc, char **arghv) {
     // assert
     assert_equals(expected, last_perror, "Executing an unknown command prints error");
 
+    // -----------------
+
     // arrange
     char **successfull_cmd = (char *[]){ "true" };
     const char *expected_succ = "";
@@ -69,6 +76,8 @@ int main(int argc, char **arghv) {
     ash_execute_command(successfull_cmd);
     // assert
     assert_equals(expected_succ, last_perror, "Executing a known command does not print and error");
+
+    // -----------------
 
     return 0;
 }
