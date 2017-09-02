@@ -66,7 +66,6 @@ int main(int argc, char **arghv) {
     // assert
     assert_equals(expected_long_cmd, long_cmd, "Reading super long commands works");
 
-
     // -----------------
 
     // arrange
