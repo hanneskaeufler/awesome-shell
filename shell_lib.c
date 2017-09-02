@@ -84,13 +84,13 @@ int ash_execute_command(char **args) {
  */
 void ash_input_loop() {
     char *line;
-    char **args = NULL;
+    char **args;
     int status;
 
     do {
         printf("> ");
         line = ash_read_line(getchar);
-        *args = line;
+        args = ash_split_line(line);
         status = ash_execute_command(args);
 
         // cleanup. I dont really understand this yet.
