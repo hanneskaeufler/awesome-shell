@@ -27,6 +27,10 @@ void assert_equals(const char *expected, const char *actual, char *message) {
     }
 }
 
+/**
+ * Assert the length of an array
+ * https://stackoverflow.com/a/14015976/1777136
+ */
 void assert_count(int expected, char **arr, char *message) {
     int count = 0;
     for (int i = 0; arr[i] != NULL; i++) {
