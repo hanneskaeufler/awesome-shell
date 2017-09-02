@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h> // for strcmp
 #include "shell_lib.h"
+#include "test_helper.h"
 
 /**
  * Testdouble for the "perror" from ... somewhere
@@ -11,47 +12,8 @@ void perror(const char *s)
 }
 
 /**
- * Stupid simple assert_true with epic output
+ * Configurable testdouble for getchar()
  */
-void assert_true(int truthy_value, char *message) {
-    if (truthy_value) {
-        printf("✅  - %s\n", message);
-    }
-    else {
-        printf("❌  - %s\n", message);
-    }
-}
-
-/**
- * Equals with strings
- */
-void assert_equals(const char *expected, const char *actual, char *message) {
-    int res = strcmp(expected, actual);
-    assert_true(res == 0, message);
-
-    if (res != 0) {
-        printf("\t-------------------------------------------------\n");
-        printf("\t \"%s\" is not equal to \"%s\"\n", actual, expected);
-        printf("\t-------------------------------------------------\n");
-    }
-}
-
-void assert_count(int expected, char **arr, char *message) {
-    int count = 0;
-    for (int i = 0; arr[i] != NULL; i++) {
-        count = i + 1;
-    }
-
-    int res = expected == count;
-    assert_true(res, message);
-
-    if (res == 0) {
-        printf("\t-------------------------------------------------\n");
-        printf("\t \"%d\" is not equal to \"%d\"\n", count, expected);
-        printf("\t-------------------------------------------------\n");
-    }
-}
-
 int did_read_char_count = 0;
 char *cmd_to_read = "";
 int fake_getchar() {
@@ -92,9 +54,10 @@ int main(int argc, char **arghv) {
     // -----------------
 
     // arrange
-    // act
     const char *line = "ls -a";
+    // act
     char **res = ash_split_line(strdup(line));
+    // assert
     assert_count(2, res, "It must split into two parts");
     assert_equals("ls", res[0], "It must split to ls at the empty space");
     assert_equals("-a", res[1], "It must split to -a at the empty space");
