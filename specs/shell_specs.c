@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h> // for strcmp
-#include "shell_lib.h"
+#include "../src/shell_lib.h"
 #include "test_helper.h"
 
 /**
