@@ -36,6 +36,22 @@ void assert_equals(const char *expected, const char *actual, char *message) {
     }
 }
 
+void assert_count(int expected, char **arr, char *message) {
+    int count = 0;
+    for (int i = 0; arr[i] != NULL; i++) {
+        count = i + 1;
+    }
+
+    int res = expected == count;
+    assert_true(res, message);
+
+    if (res == 0) {
+        printf("\t-------------------------------------------------\n");
+        printf("\t \"%d\" is not equal to \"%d\"\n", count, expected);
+        printf("\t-------------------------------------------------\n");
+    }
+}
+
 int did_read_char_count = 0;
 char *cmd_to_read = "";
 int fake_getchar() {
@@ -70,9 +86,19 @@ int main(int argc, char **arghv) {
 
     // arrange
     char **any_cmd = (char *[]){ "ls" };
-    // act
+    // act, assert
     assert_true(ash_execute_command(any_cmd) == 1, "ash_execute_command returns 1");
-    // assert
+
+    // -----------------
+
+    // arrange
+    // act
+    const char *line = "ls -a";
+    char **res = ash_split_line(strdup(line));
+    assert_count(2, res, "It must split into two parts");
+    assert_equals("ls", res[0], "It must split to ls at the empty space");
+    assert_equals("-a", res[1], "It must split to -a at the empty space");
+    free(*res); // no clue if this is needed
 
     return 0;
 }

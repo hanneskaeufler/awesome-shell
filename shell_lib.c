@@ -1,8 +1,31 @@
+#include <string.h> // for strtok
 #include <sys/wait.h> // for that waitpid stuff
 #include <stdio.h> // for teh printf
 #include <unistd.h> // fork comes from there
 #include <stdlib.h> // for EXIT_FAILURE
 #include "shell_lib.h"
+
+#define ASH_TOK_DELIM " "
+
+/**
+ * Split a line of commands into tokens separated by empty space
+ */
+char **ash_split_line(char *line) {
+    int bufsize = 64, position = 0;
+    char **tokens = malloc(sizeof(char*) * bufsize);
+    char *token = strtok(line, ASH_TOK_DELIM);
+    tokens[position] = token;
+
+    while (token != NULL) {
+        tokens[position] = token;
+        position++;
+        token = strtok(NULL, ASH_TOK_DELIM);
+    }
+
+    tokens[position] = NULL; // NULL terminating the thing?
+
+    return tokens;
+}
 
 /**
  * https://stackoverflow.com/questions/9410/how-do-you-pass-a-function-as-a-parameter-in-c
