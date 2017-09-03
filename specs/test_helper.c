@@ -33,7 +33,8 @@ void assert_equals(const char *expected, const char *actual, char *message) {
  */
 void assert_count(int expected, char **arr, char *message) {
     int count = 0;
-    for (int i = 0; arr[i] != NULL; i++) {
+    int i;
+    for (i = 0; arr[i] != NULL; i++) {
         count = i + 1;
     }
 
