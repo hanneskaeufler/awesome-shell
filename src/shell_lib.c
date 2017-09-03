@@ -60,7 +60,7 @@ char *ash_read_line(int (*getchar_fn)()) {
  * Execute the parsed command and return with status
  */
 int ash_execute_command(char **args) {
-    pid_t pid, wpid;
+    pid_t pid;
     int status;
     pid = fork();
 
@@ -71,6 +71,7 @@ int ash_execute_command(char **args) {
 
         exit(EXIT_FAILURE);
     } else {
+        pid_t wpid;
         do {
             wpid = waitpid(pid, &status, WUNTRACED);
         } while (!WIFEXITED(status) && !WIFSIGNALED(status));
