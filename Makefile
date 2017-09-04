@@ -9,4 +9,10 @@ test:
 	-o shell_specs && \
 	./shell_specs
 
-.PHONY: all test
+bundle:
+	bundle install
+
+test-integration: bundle all
+	bundle exec rspec --format=documentation integration_spec.rb
+
+.PHONY: all test test-integration
