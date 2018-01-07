@@ -23,6 +23,7 @@ int fake_getchar() {
 }
 
 int main(int argc, char **arghv) {
+    int results[6];
 
     // arrange
     did_read_char_count = 0;
@@ -31,7 +32,7 @@ int main(int argc, char **arghv) {
     // act
     char *cmd = ash_read_line(fake_getchar);
     // assert
-    assert_equals(expected_cmd, cmd, "Reading the line must return the chars that make up the command");
+    results[0] = assert_equals(expected_cmd, cmd, "Reading the line must return the chars that make up the command");
 
     // -----------------
 
@@ -42,14 +43,14 @@ int main(int argc, char **arghv) {
     // act
     char *long_cmd = ash_read_line(fake_getchar);
     // assert
-    assert_equals(expected_long_cmd, long_cmd, "Reading super long commands works");
+    results[1] = assert_equals(expected_long_cmd, long_cmd, "Reading super long commands works");
 
     // -----------------
 
     // arrange
     char **any_cmd = (char *[]){ "ls" };
     // act, assert
-    assert_true(ash_execute_command(any_cmd) == 1, "ash_execute_command returns 1");
+    results[2] = assert_true(ash_execute_command(any_cmd) == 1, "ash_execute_command returns 1");
 
     // -----------------
 
@@ -58,10 +59,15 @@ int main(int argc, char **arghv) {
     // act
     char **res = ash_split_line(strdup(line));
     // assert
-    assert_count(2, res, "It must split into two parts");
-    assert_equals("ls", res[0], "It must split to ls at the empty space");
-    assert_equals("-a", res[1], "It must split to -a at the empty space");
+    results[3] = assert_count(2, res, "It must split into two parts");
+    results[4] = assert_equals("ls", res[0], "It must split to ls at the empty space");
+    results[5] = assert_equals("-a", res[1], "It must split to -a at the empty space");
+
     free(*res); // no clue if this is needed
 
-    return 0;
+    if (all_tests_passed(results, 6)) {
+        return 0;
+    }
+
+    return 1;
 }
