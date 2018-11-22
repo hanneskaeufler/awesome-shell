@@ -61,5 +61,5 @@ int all_tests_passed(int results[], int num) {
         sum += results[i];
     }
 
-    return sum == 0;
+    return sum == num;
 }

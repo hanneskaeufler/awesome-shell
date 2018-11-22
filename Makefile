@@ -1,12 +1,26 @@
 CC ?= clang
+CFLAGS ?= -Wall -Wextra -pedantic
+DEPS ?= src/shell_lib.h
 
-all:
-	clang -Wall src/shell.c src/shell_lib.c -o shell
+shell.o: src/shell.c
+	$(CC) -c $(CFLAGS) src/shell.c
 
-test:
-	$(CC) -Wall \
-	src/shell_lib.c specs/shell_specs.c specs/test_helper.c \
-	-o shell_specs && \
+shell_lib.o: src/shell_lib.c src/shell_lib.h
+	$(CC) -c $(CFLAGS) src/shell_lib.c
+
+shell: shell.o shell_lib.o
+	$(CC) $(CFLAGS) shell.o shell_lib.o -o shell
+
+shell_specs.o: specs/shell_specs.c specs/test_helper.h
+	$(CC) -c $(CFLAGS) specs/shell_specs.c
+
+test_helper.o: specs/test_helper.c
+	$(CC) -c $(CFLAGS) specs/test_helper.c
+
+shell_specs: shell_specs.o shell_lib.o test_helper.o
+	$(CC) $(CFLAGS) shell_lib.o test_helper.o shell_specs.o -o shell_specs
+
+test: shell_specs
 	./shell_specs
 
 bundle:
@@ -15,4 +29,7 @@ bundle:
 test-integration: bundle all
 	bundle exec rspec --format=documentation integration_spec.rb
 
-.PHONY: all test test-integration
+clean:
+	-rm *.o shell shell_specs
+
+.PHONY: clean test test-integration

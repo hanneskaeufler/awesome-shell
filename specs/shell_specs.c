@@ -7,7 +7,7 @@
 /**
  * Testdouble for the "perror" from ... somewhere
  */
-void perror(const char *s)
+void perror(const char *s __attribute__ ((unused)))
 {
 }
 
@@ -22,7 +22,7 @@ int fake_getchar() {
     return c;
 }
 
-int main(int argc, char **arghv) {
+int main(int argc __attribute__ ((unused)), char **arghv __attribute__ ((unused))) {
     int results[6];
 
     // arrange
