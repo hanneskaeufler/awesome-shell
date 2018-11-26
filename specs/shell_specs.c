@@ -81,9 +81,9 @@ int main(int argc __attribute__ ((unused)), char **arghv __attribute__ ((unused)
     // teardown
     free(res);
 
-    /* if (all_tests_passed(results, 1)) { */
-    /*     return 0; */
-    /* } */
+    if (all_tests_passed(results, 7)) {
+        return 0;
+    }
 
-    return 0;
+    return 1;
 }
