@@ -7,7 +7,7 @@
 /**
  * Testdouble for the "perror" from ... somewhere
  */
-void perror(const char *s)
+void perror(const char *s __attribute__ ((unused)))
 {
 }
 
@@ -22,7 +22,8 @@ int fake_getchar() {
     return c;
 }
 
-int main(int argc, char **arghv) {
+int main(int argc __attribute__ ((unused)), char **arghv __attribute__ ((unused))) {
+    int results[7];
 
     // arrange
     did_read_char_count = 0;
@@ -31,25 +32,41 @@ int main(int argc, char **arghv) {
     // act
     char *cmd = ash_read_line(fake_getchar);
     // assert
-    assert_equals(expected_cmd, cmd, "Reading the line must return the chars that make up the command");
+    results[0] = assert_equals(expected_cmd, cmd, "Reading the line must return the chars that make up the command");
+    // teardown
+    free(cmd);
 
     // -----------------
 
     // arrange
     did_read_char_count = 0;
-    cmd_to_read = "letsseeifthisworkswithsuperlongcommands\n"; // this is 41 chars I think so 41 * 8 (8 because 64 bit? else 4) bytes = 328 bytes?
+    cmd_to_read = "letsseeifthisworkswithsuperlongcommands\n"; // this is 41 chars I think so 41 * 1 (1 because sizeof(char) is 1) bytes = 41 bytes? fitting into ASH_RL_BUFSIZE
     const char *expected_long_cmd = "letsseeifthisworkswithsuperlongcommands";
     // act
     char *long_cmd = ash_read_line(fake_getchar);
     // assert
-    assert_equals(expected_long_cmd, long_cmd, "Reading super long commands works");
+    results[1] = assert_equals(expected_long_cmd, long_cmd, "Reading long commands works");
+    // teardown
+    free(long_cmd);
+
+    // -----------------
+    // arrange
+    did_read_char_count = 0;
+    cmd_to_read = "iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii\n"; // this is 150 chars I think so 150 * 1 bytes = 150 bytes? Not fitting into ASH_RL_BUFSIZE and having to reallocate
+    const char *expected_super_long_cmd = "iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii";
+    // act
+    char *super_long_cmd = ash_read_line(fake_getchar);
+    // assert
+    results[2] = assert_equals(expected_super_long_cmd, super_long_cmd, "Reading super long commands works");
+    // teardown
+    free(long_cmd);
 
     // -----------------
 
     // arrange
     char **any_cmd = (char *[]){ "ls" };
     // act, assert
-    assert_true(ash_execute_command(any_cmd) == 1, "ash_execute_command returns 1");
+    results[3] = assert_true(ash_execute_command(any_cmd) == 1, "ash_execute_command returns 1");
 
     // -----------------
 
@@ -58,10 +75,15 @@ int main(int argc, char **arghv) {
     // act
     char **res = ash_split_line(strdup(line));
     // assert
-    assert_count(2, res, "It must split into two parts");
-    assert_equals("ls", res[0], "It must split to ls at the empty space");
-    assert_equals("-a", res[1], "It must split to -a at the empty space");
-    free(*res); // no clue if this is needed
+    results[4] = assert_count(2, res, "It must split into two parts");
+    results[5] = assert_equals("ls", res[0], "It must split to ls at the empty space");
+    results[6] = assert_equals("-a", res[1], "It must split to -a at the empty space");
+    // teardown
+    free(res);
 
-    return 0;
+    if (all_tests_passed(results, 7)) {
+        return 0;
+    }
+
+    return 1;
 }

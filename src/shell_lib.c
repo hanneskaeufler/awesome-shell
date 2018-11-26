@@ -22,7 +22,7 @@ char **ash_split_line(char *line) {
         token = strtok(NULL, ASH_TOK_DELIM);
     }
 
-    tokens[position] = NULL; // NULL terminating the thing?
+    tokens[position] = NULL; // NULL terminating the array
 
     return tokens;
 }
@@ -30,8 +30,9 @@ char **ash_split_line(char *line) {
 /**
  * https://stackoverflow.com/questions/9410/how-do-you-pass-a-function-as-a-parameter-in-c
  */
+#define ASH_RL_BUFSIZE 64
 char *ash_read_line(int (*getchar_fn)()) {
-    int bufsize = 1;
+    int bufsize = ASH_RL_BUFSIZE;
     char *buffer = malloc(sizeof(char) * bufsize);
     int c;
     int position = 0;
@@ -40,18 +41,18 @@ char *ash_read_line(int (*getchar_fn)()) {
         c = (*getchar_fn)();
 
         if (c == '\n') {
-            buffer[position] =  '\0';
+            buffer[position] = '\0'; // Terminate with 0 character
             return buffer;
         } else {
             buffer[position] = c;
         }
         position++;
-    }
 
-    /* if (position >= bufsize) { */
-    /*     bufsize += 1024; */
-    /*     buffer = realloc(buffer, bufsize); */
-    /* } */
+        if (position >= bufsize) {
+            bufsize += ASH_RL_BUFSIZE;
+            buffer = realloc(buffer, bufsize);
+        }
+    }
 
     return buffer;
 }
@@ -94,8 +95,7 @@ void ash_input_loop() {
         args = ash_split_line(line);
         status = ash_execute_command(args);
 
-        // cleanup. I dont really understand this yet.
-        free(line);
-        free(args);
+        free(line); // free alloced memory from ash_read_line
+        free(args); // free alloced memory from ash_split_line
     } while (status);
 }
