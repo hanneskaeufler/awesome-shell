@@ -40,7 +40,7 @@ int main(int argc __attribute__ ((unused)), char **arghv __attribute__ ((unused)
 
     // arrange
     did_read_char_count = 0;
-    cmd_to_read = "letsseeifthisworkswithsuperlongcommands\n"; // this is 41 chars I think so 41 * 8 (8 because 64 bit? else 4) bytes = 328 bytes? fitting into ASH_RL_BUFSIZE
+    cmd_to_read = "letsseeifthisworkswithsuperlongcommands\n"; // this is 41 chars I think so 41 * 1 (1 because sizeof(char) is 1) bytes = 41 bytes? fitting into ASH_RL_BUFSIZE
     const char *expected_long_cmd = "letsseeifthisworkswithsuperlongcommands";
     // act
     char *long_cmd = ash_read_line(fake_getchar);
@@ -52,7 +52,7 @@ int main(int argc __attribute__ ((unused)), char **arghv __attribute__ ((unused)
     // -----------------
     // arrange
     did_read_char_count = 0;
-    cmd_to_read = "iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii\n"; // this is 150 chars I think so 150 * 8 bytes = 1200 bytes? Not fitting into ASH_RL_BUFSIZE and having to reallocate
+    cmd_to_read = "iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii\n"; // this is 150 chars I think so 150 * 1 bytes = 150 bytes? Not fitting into ASH_RL_BUFSIZE and having to reallocate
     const char *expected_super_long_cmd = "iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii";
     // act
     char *super_long_cmd = ash_read_line(fake_getchar);
