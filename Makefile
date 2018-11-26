@@ -1,5 +1,5 @@
 CC ?= clang
-CFLAGS ?= -Wall -Wextra -pedantic
+CFLAGS ?= -Wall -Wextra -pedantic -std=C++11
 DEPS ?= src/shell_lib.h
 
 shell.o: src/shell.c
