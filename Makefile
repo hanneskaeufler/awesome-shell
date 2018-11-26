@@ -20,6 +20,8 @@ test_helper.o: specs/test_helper.c
 shell_specs: shell_specs.o shell_lib.o test_helper.o
 	$(CC) $(CFLAGS) shell_lib.o test_helper.o shell_specs.o -o shell_specs
 
+all: shell
+
 test: shell_specs
 	./shell_specs
 
